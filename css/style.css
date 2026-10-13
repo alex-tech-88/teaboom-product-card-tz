@@ -1,0 +1,757 @@
+/* ---------- Переменные ---------- */
+
+/*
+  Значения взяты из стилей teaboom.ru.
+  Серый, красный и зелёный чуть темнее оригинала (#808080, #ff0000, #80bc14),
+  чтобы мелкий текст и иконка проходили по контрасту WCAG AA.
+*/
+:root {
+  --color-text: #444444;
+  --color-heading: #202020;
+  --color-muted: #6b6b6b;
+  --color-bg: #fbfbfb;
+  --color-surface: #ffffff;
+  --color-row: #f6f7f8;
+  --color-row-border: #f0f0f0;
+  --color-divider: #eeeeee;
+  --color-price: #d10000;
+  --color-salad: #e9f2c3;
+  --color-dark: #202020;
+  --color-yellow: #f5d730;
+  --color-green: #669a10;
+  --color-cream: #fefcef;
+  --color-tab: #dddddd;
+  --color-like-border: #808080;
+  --color-focus: #2f6fe5;
+}
+
+/* ---------- База ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--color-text);
+  /* Узор с чашками с сайта, заранее наложен на фон #fbfbfb и сжат в WebP (20 КБ вместо 488 КБ PNG) */
+  background: var(--color-bg) url("../img/pattern.webp") repeat;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Страница ---------- */
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding: 24px 32px;
+  }
+}
+
+/* ---------- Хлебные крошки ---------- */
+
+.breadcrumbs {
+  margin-bottom: 8px;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.breadcrumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Разделитель как на сайте — короткая черта 4 × 1px. После пункта, чтобы при переносе не начинать с неё строку */
+.breadcrumbs__item:not(:last-child)::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 1px;
+  margin: 0 6px;
+  vertical-align: middle;
+  background-color: var(--color-text);
+}
+
+.breadcrumbs__link {
+  text-decoration: none;
+}
+
+.breadcrumbs__link:hover {
+  color: var(--color-heading);
+  text-decoration: underline;
+}
+
+.breadcrumbs__item[aria-current="page"] {
+  color: var(--color-muted);
+}
+
+/* ---------- Карточка товара ---------- */
+
+.product {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .product {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+    row-gap: 32px;
+    align-items: start;
+  }
+}
+
+.product__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+  color: var(--color-heading);
+}
+
+@media (min-width: 768px) {
+  .product__title {
+    grid-column: 1 / -1;
+    font-size: 32px;
+    line-height: 42px;
+  }
+}
+
+/* ---------- Галерея ---------- */
+
+/* На больших телефонах и узких планшетах фото во всю ширину выходит огромным — ограничиваем */
+@media (min-width: 480px) and (max-width: 767px) {
+  .product__gallery {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+}
+
+.gallery__main {
+  position: relative;
+  margin-bottom: 10px;
+  background-color: var(--color-surface);
+}
+
+.gallery__image {
+  width: 100%;
+  cursor: zoom-in;
+}
+
+/* Зелёная лупа в правом верхнем углу, как на сайте */
+.gallery__zoom {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #ffffff;
+  background-color: var(--color-green);
+  border: 0;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.gallery__zoom:hover {
+  color: var(--color-green);
+  background-color: #fafafb;
+}
+
+/* Миниатюры — по трети ширины, неактивные полупрозрачные */
+.gallery__thumbs {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gallery__thumbs-item {
+  width: calc((100% - 20px) / 3);
+}
+
+.gallery__thumb {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background-color: var(--color-surface);
+  border: 0;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.gallery__thumb:hover {
+  opacity: 0.9;
+}
+
+.gallery__thumb[aria-current="true"] {
+  opacity: 1;
+  cursor: default;
+}
+
+.gallery__thumb img {
+  width: 100%;
+}
+
+/* ---------- Инфо ---------- */
+
+/* Строки фасовок и блок покупки подстраиваются под ширину колонки, а не всего экрана */
+.product__info {
+  container: product-info / inline-size;
+}
+
+.product__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.product__review {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.product__review:hover {
+  color: var(--color-heading);
+  text-decoration: underline;
+}
+
+.like {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 33px;
+  height: 33px;
+  padding: 0;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-like-border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.like:hover {
+  color: var(--color-heading);
+  border-color: var(--color-heading);
+}
+
+/* Добавлено в избранное — жёлтый кружок, как на сайте */
+.like[aria-pressed="true"] {
+  color: var(--color-heading);
+  background-color: var(--color-yellow);
+  border-color: var(--color-yellow);
+}
+
+.like[aria-pressed="true"] .like__icon path {
+  fill: currentColor;
+}
+
+/* ---------- Фасовки ---------- */
+
+.variants {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/*
+  Строка как на сайте: вес и артикул | цена | наличие | ячейка 44px.
+  На сайте в ячейке кнопка корзины, здесь — отметка выбранной фасовки
+  в тех же цветах: салатовый, при наведении и выборе — чёрный с жёлтым.
+*/
+.variant {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 84px 44px;
+  align-items: center;
+  min-height: 47px;
+  margin-bottom: 6px;
+  padding-left: 15px;
+  font-weight: 700;
+  background-color: var(--color-row);
+  border: 1px solid var(--color-row-border);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.variant:has(.variant__input:checked) {
+  border-color: var(--color-dark);
+}
+
+.variant:has(.variant__input:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.variant__name {
+  display: flex;
+  flex-direction: column;
+  line-height: 18px;
+}
+
+.variant__sku {
+  font-size: 10px;
+  line-height: 14px;
+  color: var(--color-muted);
+}
+
+.variant__price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0 12px;
+  line-height: 1.15;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.variant__price-current {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-price);
+}
+
+.variant__price-old {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.variant__stock {
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  line-height: 14px;
+}
+
+.variant__stock small {
+  font-size: 10px;
+  color: var(--color-muted);
+}
+
+.variant__stock-amount {
+  font-size: 12px;
+  color: var(--color-price);
+}
+
+.variant__check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  background-color: var(--color-salad);
+  border-left: 1px solid var(--color-divider);
+  transition: background-color 0.2s;
+}
+
+.variant__check::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-text);
+  border-radius: 50%;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.variant:hover .variant__check,
+.variant__input:checked ~ .variant__check {
+  background-color: var(--color-dark);
+}
+
+.variant:hover .variant__check::before {
+  border-color: var(--color-yellow);
+}
+
+/* Выбранная: жёлтая точка внутри кружка */
+.variant__input:checked ~ .variant__check::before {
+  border-color: var(--color-yellow);
+  background-color: var(--color-yellow);
+  box-shadow: inset 0 0 0 3px var(--color-dark);
+}
+
+/* В очень узкой колонке наличие не помещается — оно одинаковое у всех фасовок */
+@container product-info (max-width: 329px) {
+  .variant {
+    grid-template-columns: minmax(0, 1fr) auto 44px;
+  }
+
+  .variant__stock {
+    display: none;
+  }
+}
+
+/* ---------- Итог и покупка ---------- */
+
+.summary {
+  margin-top: 16px;
+  padding: 15px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-row-border);
+}
+
+.summary__sku {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+/*
+  Колонка цены фиксированной ширины: длина цены меняется вместе с фасовкой
+  («326,40 ₽» → «6 320 ₽»), а кнопка корзины остаётся на месте.
+  200px вмещают самый длинный вариант — текущую и старую цену 100 г.
+*/
+.summary__buy {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 12px 20px;
+}
+
+@container product-info (min-width: 440px) {
+  .summary__buy {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.price__current {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  color: var(--color-price);
+}
+
+.price__old {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+/* Кнопка в цветах ячейки корзины сайта: салатовая, при наведении чёрная с жёлтым */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 45px;
+  padding: 0 24px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+  background-color: var(--color-salad);
+  border: 0;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, transform 0.1s;
+}
+
+.button:hover {
+  color: var(--color-yellow);
+  background-color: var(--color-dark);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button__icon {
+  flex-shrink: 0;
+}
+
+.button--cart {
+  width: 100%;
+}
+
+@container product-info (min-width: 440px) {
+  .button--cart {
+    max-width: 220px;
+  }
+}
+
+/* ---------- Вкладки ---------- */
+
+.tabs {
+  border: 1px solid var(--color-row-border);
+}
+
+@media (min-width: 768px) {
+  .tabs {
+    grid-column: 1 / -1;
+  }
+}
+
+.tabs__list {
+  display: flex;
+  gap: 24px;
+  padding: 0 16px;
+  overflow-x: auto;
+  background-color: var(--color-dark);
+}
+
+@media (min-width: 768px) {
+  .tabs__list {
+    gap: 60px;
+    padding: 0 30px;
+  }
+}
+
+.tabs__tab {
+  padding: 16px 0 13px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 30px;
+  white-space: nowrap;
+  color: var(--color-tab);
+  background: none;
+  border: 0;
+  /* Помимо цвета активную вкладку видно по жёлтой черте — цвет из палитры сайта */
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+@media (min-width: 768px) {
+  .tabs__tab {
+    padding: 22px 0 19px;
+    font-size: 18px;
+  }
+}
+
+.tabs__tab:hover {
+  color: #ffffff;
+}
+
+.tabs__tab[aria-selected="true"] {
+  color: #ffffff;
+  border-bottom-color: var(--color-yellow);
+}
+
+.tabs__tab:focus-visible {
+  outline-offset: -2px;
+}
+
+.tabs__panel {
+  padding: 20px 16px;
+  background-color: var(--color-cream);
+}
+
+@media (min-width: 768px) {
+  .tabs__panel {
+    padding: 30px 45px;
+  }
+}
+
+.tabs__panel:focus-visible {
+  outline-offset: -2px;
+}
+
+.tabs__panel p {
+  margin: 0 0 16px;
+}
+
+.tabs__panel > :last-child {
+  margin-bottom: 0;
+}
+
+.tabs__heading {
+  margin: 24px 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  color: var(--color-heading);
+}
+
+.tabs__list-items {
+  margin: 0;
+  padding-left: 40px;
+}
+
+.tabs__empty {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+/* Характеристики: на телефоне — название над значением, шире — в две колонки */
+.specs {
+  margin: 0;
+}
+
+.specs__row {
+  padding: 8px 0;
+  border-bottom: 1px dashed #e5e1c8;
+}
+
+.specs__row:last-child {
+  border-bottom: 0;
+}
+
+.specs dt {
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.specs dd {
+  margin: 0;
+}
+
+@media (min-width: 480px) {
+  .specs__row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+  }
+}
+
+/* ---------- Полноэкранная галерея ---------- */
+
+.lightbox {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 64px 16px 24px;
+  color: #ffffff;
+  background-color: transparent;
+  border: 0;
+}
+
+.lightbox[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.lightbox::backdrop {
+  background-color: rgb(0 0 0 / 0.9);
+}
+
+/* <picture> не мешает картинке быть flex-элементом и ограничиваться по высоте окна */
+.lightbox picture {
+  display: contents;
+}
+
+.lightbox__image {
+  width: auto;
+  max-width: min(100%, 970px);
+  max-height: calc(100% - 40px);
+  object-fit: contain;
+  background-color: var(--color-surface);
+}
+
+.lightbox__counter {
+  margin: 0;
+  font-size: 14px;
+}
+
+.lightbox__button {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  color: #ffffff;
+  background-color: rgb(255 255 255 / 0.12);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.lightbox__button:hover {
+  background-color: rgb(255 255 255 / 0.25);
+}
+
+.lightbox__button--close {
+  top: 12px;
+  right: 12px;
+}
+
+.lightbox__button--prev,
+.lightbox__button--next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox__button--prev {
+  left: 12px;
+}
+
+.lightbox__button--next {
+  right: 12px;
+}
+
+.lightbox__button[hidden],
+.lightbox__counter[hidden] {
+  display: none;
+}
+
+.is-scroll-locked {
+  overflow: hidden;
+}
